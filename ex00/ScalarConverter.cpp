@@ -6,7 +6,7 @@
 /*   By: yuliano <yuliano@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/21 20:49:57 by yuliano           #+#    #+#             */
-/*   Updated: 2026/03/22 19:34:01 by yuliano          ###   ########.fr       */
+/*   Updated: 2026/03/22 22:48:53 by yuliano          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,6 +168,50 @@ int ScalarConverter::ParseInt(const std::string &value)
 	return (int)num;
 }
 
+double ScalarConverter::ParseDouble(const std::string &value)
+{
+	double num;
+	num = atof(value.c_str());
+	return num;
+}
+
+void ScalarConverter::ConverDouble(double dnum)
+{
+	
+	float fnum;
+	
+	if (dnum < 0 || dnum > 127)
+		std::cout<<"char : impossible\n";
+	else if (isprint(static_cast<int>(dnum)))
+		std::cout<<"char : '"<<static_cast<char>(dnum)<<"'\n";
+	else
+		std::cout<<"char : Non displayable\n";
+	if (dnum >= INT_MIN && dnum <= INT_MAX)
+		std::cout<<"int : "<<static_cast<int>(dnum)<<"\n";
+	else
+		std::cout<<"int : impossible\n";
+	fnum = static_cast<float>(dnum);
+	ConverDecimal(dnum, fnum);
+}
+
+void ScalarConverter::ConverFloat(float fnum)
+{
+		double dnum;
+	
+	if (fnum < 0 || fnum > 127)
+		std::cout<<"char : impossible\n";
+	else if (isprint(static_cast<int>(fnum)))
+		std::cout<<"char : '"<<static_cast<char>(fnum)<<"'\n";
+	else
+		std::cout<<"char : Non displayable\n";
+	if (fnum >= INT_MIN && fnum <= INT_MAX)
+		std::cout<<"int : "<<static_cast<int>(fnum)<<"\n";
+	else
+		std::cout<<"int : impossible\n";
+	dnum = static_cast<double>(fnum);
+	ConverDecimal(dnum, fnum);
+}
+
 void ScalarConverter::ConverDecimal(double dnum, float fnum)
 {
 	if (fnum != floor(fnum))
@@ -183,7 +227,7 @@ void ScalarConverter::ConverDecimal(double dnum, float fnum)
 void ScalarConverter::ConverChar(char c)
 {
 	double d_temp;
-	double f_temp;
+	float f_temp;
 	
 	std::cout<<"char  : '"<< c                   <<"'\n";
 	std::cout<<"int   : " <<static_cast<int>(c)  <<std::endl;
@@ -209,19 +253,68 @@ void ScalarConverter::ConverInt(int num)
 	ConverDecimal(d_temp, f_temp);
 }
 
+bool ScalarConverter::SpecialCase(const std::string &value)
+{
+	if (value == "nan" || value == "nanf")
+	{
+		std::cout<<"char  : impossible\n";
+		std::cout<<"int   : impossible\n";
+		std::cout<<"float : nanf\n";
+		std::cout<<"double: nan\n";
+		return true;
+	}
+	else if (value == "+inf")
+	{
+		std::cout<<"char  : impossible\n";
+		std::cout<<"int   : impossible\n";
+		std::cout<<"float : +inff\n";
+		std::cout<<"double: +inf\n";
+		return true;
+	}
+	else if (value == "-inf")
+	{
+		std::cout<<"char  : impossible\n";
+		std::cout<<"int   : impossible\n";
+		std::cout<<"float : -inff\n";
+		std::cout<<"double: -inf\n";
+		return true;
+	}
+	else if (value == "+inff")
+	{
+		std::cout<<"char  : impossible\n";
+		std::cout<<"int   : impossible\n";
+		std::cout<<"float : +inff\n";
+		std::cout<<"double: +inf\n";
+		return true;
+	}
+	else if (value == "-inff")
+	{
+		std::cout<<"char  : impossible\n";
+		std::cout<<"int   : impossible\n";
+		std::cout<<"float : -inff\n";
+		std::cout<<"double: -inf\n";
+		return true;
+	}
+	return false;
+}
+
 void ScalarConverter::convert(const std::string &value)
 {
 	int type = DetectType(value);
 	char c;
 	int num;
-
+	float fnum;
+	double dnum;
+	
+	if (SpecialCase(value))
+		return ;
 	switch (type)
 	{
 		case FALSE:
 			std::cout<<"Input invalid\n";
 			break;
 		case CHAR:
-			c =ParseChar(value);
+			c = ParseChar(value);
 			ConverChar(c);
 			break;
 		case INT:
@@ -235,5 +328,13 @@ void ScalarConverter::convert(const std::string &value)
 				std::cerr << e;
 			}
 			break;
-	}
+		case FLOAT:
+			fnum = ParseDouble(value);
+			ConverFloat(fnum);
+			break;
+		case DOUBLE:
+			dnum = ParseDouble(value);
+			ConverDouble(dnum);
+			break;
+		}
 }

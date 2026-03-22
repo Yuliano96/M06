@@ -6,7 +6,7 @@
 /*   By: yuliano <yuliano@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/21 20:39:10 by yuliano           #+#    #+#             */
-/*   Updated: 2026/03/22 19:07:38 by yuliano          ###   ########.fr       */
+/*   Updated: 2026/03/22 21:45:43 by yuliano          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,10 @@ class ScalarConverter
 	static void ConverDecimal(double dnum, float fnum);
 	static void ConverChar(char c);
 	static void ConverInt(int num);
+	static double ParseDouble(const std::string &value);
+	static void ConverDouble(double dnum);
+	static void ConverFloat(float fnum);
+	static bool SpecialCase(const std::string &value);
 	
 	public:
 	
